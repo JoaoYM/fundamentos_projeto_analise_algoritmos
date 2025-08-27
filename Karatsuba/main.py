@@ -1,5 +1,4 @@
 import sys
-import math
 
 def karatsuba(x, y):
     """Multiplica dois números inteiros usando o algoritmo de Karatsuba."""
@@ -30,11 +29,24 @@ def karatsuba(x, y):
 if __name__ == "__main__":
     sys.setrecursionlimit(2000)
 
+    # Exemplos fixos
     num1, num2 = 5678, 1234
     print(f"O produto entre {num1} e {num2} é: {karatsuba(num1, num2)}")
     print(f"Verificação: {num1 * num2}")
+    print("-" * 30)
 
-    num3 = 1866666
-    num4 = 158791
+    num3 = 12345678901234567890
+    num4 = 98765432109876543210
     print(f"O produto entre números grandes é: {karatsuba(num3, num4)}")
     print(f"Verificação: {num3 * num4}")
+    print("-" * 30)
+
+    # Input manual
+    try:
+        input1 = int(input("Digite o primeiro número inteiro: "))
+        input2 = int(input("Digite o segundo número inteiro: "))
+        resultado_usuario = karatsuba(input1, input2)
+        print(f"\nO resultado da multiplicação é: {resultado_usuario}")
+        print(f"Verificação (multiplicação padrão): {input1 * input2}")
+    except ValueError:
+        print("\nEntrada inválida. Por favor, digite apenas números inteiros.")
