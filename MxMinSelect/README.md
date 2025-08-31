@@ -238,3 +238,111 @@ Conforme a classificação apresentada no material da disciplina (Páginas 107-1
 - CORMEN, T. H. et al. Algoritmos: Teoria e Prática. 3.ed. Elsevier, 2012.
 - ZIVIANI, Nivio. Projeto de Algoritmos. Cengage Learning, 2007.
 ```
+
+## Extra
+
+-----
+
+### **Diagrama Visual do Algoritmo MaxMin Select**
+
+**Objetivo:** Ilustrar o processo de divisão e conquista para encontrar o menor e o maior elemento em um array de exemplo: `[10, 5, 25, 3, 42, 1, 88, 7]`.
+
+#### **Nível 0: Problema Original**
+
+  * **Entrada:** `arr = [10, 5, 25, 3, 42, 1, 88, 7]` (n=8)
+  * **Ação:** `max_min_select(arr)`
+  * **Comparações neste nível:** 0 (apenas divisão)
+
+-----
+
+#### **Nível 1: Primeira Divisão**
+
+O problema é dividido em duas metades.
+
+  * **Chamada Recursiva Esquerda:** `max_min_select([10, 5, 25, 3])`
+  * **Chamada Recursiva Direita:** `max_min_select([42, 1, 88, 7])`
+  * **Comparações neste nível:** 0 (apenas divisão)
+
+-----
+
+#### **Nível 2: Segunda Divisão (Até os Casos Base)**
+
+Cada metade é dividida novamente, chegando a subproblemas de tamanho 2.
+
+  * **Subproblema 1 (Esquerda-Esquerda):** `max_min_select([10, 5])`
+  * **Subproblema 2 (Esquerda-Direita):** `max_min_select([25, 3])`
+  * **Subproblema 3 (Direita-Esquerda):** `max_min_select([42, 1])`
+  * **Subproblema 4 (Direita-Direita):** `max_min_select([88, 7])`
+  * **Comparações neste nível (Conquista/Casos Base):** Cada subproblema tem `n=2`, executando **1 comparação**. Total: **4 comparações**.
+
+-----
+
+#### **Fase de Combinação (Retorno da Recursão)**
+
+##### **Retorno para o Nível 1**
+
+Os resultados dos casos base são combinados.
+
+1.  **Combinação Esquerda:**
+
+      * Resultados recebidos: `(5, 10)` e `(3, 25)`
+      * `min(5, 3)` -\> `3` (1 comparação)
+      * `max(10, 25)` -\> `25` (1 comparação)
+      * **Resultado combinado:** `(3, 25)`
+      * **Comparações:** 2
+
+2.  **Combinação Direita:**
+
+      * Resultados recebidos: `(1, 42)` e `(7, 88)`
+      * `min(1, 7)` -\> `1` (1 comparação)
+      * `max(42, 88)` -\> `88` (1 comparação)
+      * **Resultado combinado:** `(1, 88)`
+      * **Comparações:** 2
+
+<!-- end list -->
+
+  * **Total de Comparações na combinação para o Nível 1:** 2 + 2 = **4 comparações**.
+
+##### **Retorno para o Nível 0 (Final)**
+
+Os resultados combinados do Nível 1 são usados para a combinação final.
+
+  * **Combinação Final:**
+
+      * Resultados recebidos: `(3, 25)` e `(1, 88)`
+      * `min(3, 1)` -\> `1` (1 comparação)
+      * `max(25, 88)` -\> `88` (1 comparação)
+      * **Resultado final:** `(1, 88)`
+      * **Comparações:** 2
+
+  * **Total de Comparações na combinação para o Nível 0:** **2 comparações**.
+
+-----
+
+### **Resumo da Estrutura e Comparações**
+
+A estrutura pode ser visualizada como uma árvore binária:
+
+```
+                                    [10, 5, 25, 3, 42, 1, 88, 7]
+                                      /                        \
+                    [10, 5, 25, 3]                               [42, 1, 88, 7]
+                    /          \                                 /          \
+              [10, 5]          [25, 3]                       [42, 1]          [88, 7]
+                 |                |                             |                |
+    Conquista: (5, 10)         (3, 25)                       (1, 42)          (7, 88)  <-- 4 comparações (1 para cada par)
+                 \              /                               \              /
+    Combinação:       (3, 25)                                     (1, 88)      <-- 4 comparações (2 para cada combinação)
+                       \                                        /
+    Combinação Final:                  (1, 88)                                     <-- 2 comparações (combinação final)
+
+```
+
+**Análise de Comparações por Etapa:**
+
+  * **Conquista (Casos Base `n=2`):** 4 comparações
+  * **Combinação (Nível 1):** 4 comparações
+  * **Combinação (Nível 0):** 2 comparações
+  * **Total de Comparações:** 4 + 4 + 2 = **10 comparações**
+
+Este total confirma a fórmula $C(n) = \\frac{3n}{2} - 2$, pois para $n=8$, o resultado é $\\frac{3 \\cdot 8}{2} - 2 = 12 - 2 = 10$. [cite\_start]O diagrama ilustra visualmente como essa eficiência é alcançada[cite: 1549, 1550, 1551, 1552].
