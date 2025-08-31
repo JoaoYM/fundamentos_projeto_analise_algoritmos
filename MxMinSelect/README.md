@@ -95,8 +95,8 @@ Para executar o código em seu ambiente local, siga as instruções abaixo:
 
 1. **Clone o repositório:**
 ```bash
-git clone https://github.com/seu-usuario/trabalho_individual_2_FPAA.git
-cd trabalho_individual_2_FPAA
+git clone https://github.com/JoaoYM/fundamentos_projeto_analise_algoritmos.git
+cd MxMinSelect
 ```
 
 2. **Execute o arquivo principal:**
