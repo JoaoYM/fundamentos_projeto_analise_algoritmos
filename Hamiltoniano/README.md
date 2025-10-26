@@ -92,7 +92,7 @@ O script `main.py` foi refatorado para aceitar entradas interativas e incluir a 
 
     ```bash
     git clone https://github.com/JoaoYM/fundamentos_projeto_analise_algoritmos.git
-    cd seu-repositorio
+    cd Hamiltoniano
     ```
 
 2.  **(Opcional) Habilitando a Visualização (Ponto Extra):**
