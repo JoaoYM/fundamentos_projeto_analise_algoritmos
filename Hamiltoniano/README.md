@@ -2,9 +2,9 @@
 
 **Trabalho Individual 3 - Fundamentos de Projeto e Análise de Algoritmos**
 
-Este projeto apresenta uma implementação em Python do algoritmo de **Backtracking** para encontrar um **Caminho Hamiltoniano** em um grafo. [cite_start]Um Caminho Hamiltoniano é um caminho que visita cada vértice do grafo exatamente uma vez[cite: 1177].
+Este projeto apresenta uma implementação em Python do algoritmo de **Backtracking** para encontrar um **Caminho Hamiltoniano** em um grafo. Um Caminho Hamiltoniano é um caminho que visita cada vértice do grafo exatamente uma vez[cite: 1177].
 
-[cite_start]Encontrar tal caminho é um problema NP-Completo clássico, intimamente relacionado ao Problema do Caixeiro Viajante (TSP)[cite: 1178]. A abordagem de backtracking implementada explora sistematicamente todas as possibilidades de caminhos, "retrocedendo" assim que um caminho se mostra inviável.
+Encontrar tal caminho é um problema NP-Completo clássico, intimamente relacionado ao Problema do Caixeiro Viajante (TSP)[cite: 1178]. A abordagem de backtracking implementada explora sistematicamente todas as possibilidades de caminhos, "retrocedendo" assim que um caminho se mostra inviável.
 
 ---
 
@@ -78,7 +78,7 @@ Para executar o código em seu ambiente local, siga as instruções abaixo:
 
 1.  **Clone o repositório (exemplo):**
     ```bash
-    git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+    git clone https://github.com/JoaoYM/fundamentos_projeto_analise_algoritmos.git
     cd seu-repositorio
     ```
 
@@ -114,30 +114,30 @@ Para executar o código em seu ambiente local, siga as instruções abaixo:
 O Problema do Caminho Hamiltoniano (HPP) é um problema de decisão fundamental na teoria da computação. Sua classificação é a seguinte:
 
 * **Classe P (Polinomial)**:
-    * [cite_start]**Definição:** Problemas que podem ser *resolvidos* por um algoritmo determinístico em tempo polinomial ($O(n^k)$)[cite: 845, 847].
+    * **Definição:** Problemas que podem ser *resolvidos* por um algoritmo determinístico em tempo polinomial ($O(n^k)$)[cite: 845, 847].
     * **Classificação HPP:** O HPP **não pertence** à classe P (assumindo a crença geral de que $P \ne NP$). Não existe um algoritmo conhecido que resolva o HPP em tempo polinomial.
 
 * **Classe NP (Não-Determinístico Polinomial)**:
-    * [cite_start]**Definição:** Problemas cujas soluções ("certificados") podem ser *verificadas* em tempo polinomial por um algoritmo determinístico[cite: 859, 861].
+    * **Definição:** Problemas cujas soluções ("certificados") podem ser *verificadas* em tempo polinomial por um algoritmo determinístico[cite: 859, 861].
     * **Classificação HPP:** O HPP **pertence** à classe NP. Se recebermos um caminho candidato (uma sequência de $V$ vértices), podemos verificá-lo em tempo polinomial:
         1.  Checar se o caminho contém $V$ vértices únicos ($O(V)$).
         2.  Checar se existe uma aresta entre cada vértice $v_i$ e $v_{i+1}$ no caminho ( $O(V)$ ).
     * Como a verificação é polinomial, o problema está em NP.
 
 * **Classe NP-Difícil (NP-Hard)**:
-    * [cite_start]**Definição:** Problemas que são *pelo menos tão difíceis* quanto qualquer problema em NP[cite: 898]. [cite_start]Todo problema NP pode ser reduzido a um problema NP-Difícil em tempo polinomial[cite: 898, 929].
+    * **Definição:** Problemas que são *pelo menos tão difíceis* quanto qualquer problema em NP[cite: 898]. Todo problema NP pode ser reduzido a um problema NP-Difícil em tempo polinomial[cite: 898, 929].
     * **Classificação HPP:** O HPP **é NP-Difícil**.
 
 * **Classe NP-Completo (NP-Complete)**:
-    * [cite_start]**Definição:** Problemas que atendem a duas condições: 1) Pertencem a NP e 2) São NP-Difíceis[cite: 882, 884, 885].
-    * [cite_start]**Classificação HPP:** O HPP **é NP-Completo**[cite: 940, 1015]. Ele está em NP (é verificável) e é NP-Difícil (tão difícil quanto qualquer problema NP).
+    * **Definição:** Problemas que atendem a duas condições: 1) Pertencem a NP e 2) São NP-Difíceis[cite: 882, 884, 885].
+    * **Classificação HPP:** O HPP **é NP-Completo**[cite: 940, 1015]. Ele está em NP (é verificável) e é NP-Difícil (tão difícil quanto qualquer problema NP).
 
 **Justificativa (Relação com o TSP):**
-[cite_start]O Problema do Caixeiro Viajante (TSP) [cite: 1028][cite_start], em sua versão de decisão ("existe um ciclo de custo $\le k$?"), é NP-Completo[cite: 1016]. O Problema do Caminho Hamiltoniano pode ser reduzido ao TSP. Se pudéssemos resolver o HPP em tempo polinomial, poderíamos também resolver o TSP e, por extensão, todos os problemas NP-Completos. Isso solidifica sua classificação como NP-Completo.
+O Problema do Caixeiro Viajante (TSP) [cite: 1028], em sua versão de decisão ("existe um ciclo de custo $\le k$?"), é NP-Completo[cite: 1016]. O Problema do Caminho Hamiltoniano pode ser reduzido ao TSP. Se pudéssemos resolver o HPP em tempo polinomial, poderíamos também resolver o TSP e, por extensão, todos os problemas NP-Completos. Isso solidifica sua classificação como NP-Completo.
 
 ### Análise da Complexidade Assintótica de Tempo
 
-* [cite_start]**Método Utilizado:** A complexidade é determinada pela **análise da árvore de recursão (contagem de operações)**, similar à análise de força bruta do TSP[cite: 1100, 1101, 1116]. O Teorema Mestre não se aplica, como detalhado abaixo.
+* **Método Utilizado:** A complexidade é determinada pela **análise da árvore de recursão (contagem de operações)**, similar à análise de força bruta do TSP[cite: 1100, 1101, 1116]. O Teorema Mestre não se aplica, como detalhado abaixo.
 * **Análise:** No pior caso, a função `_backtrack_util` será chamada para cada caminho possível.
     * O primeiro vértice (escolhido na função principal) tem $V$ opções.
     * O segundo vértice (primeira chamada recursiva) tem até $(V-1)$ vizinhos para explorar.
@@ -153,13 +153,13 @@ O Problema do Caminho Hamiltoniano (HPP) é um problema de decisão fundamental 
 
 **Justificativa:**
 O Teorema Mestre foi projetado para resolver recorrências de **divisão e conquista**, que seguem o formato estrito:
-[cite_start]$T(n) = a \cdot T(n/b) + f(n)$ [cite: 205]
+$T(n) = a \cdot T(n/b) + f(n)$ [cite: 205]
 
-[cite_start]O Teorema Mestre exige que o problema seja dividido em subproblemas de tamanho *proporcional* (ex: $n/b$)[cite: 212, 415, 541].
+O Teorema Mestre exige que o problema seja dividido em subproblemas de tamanho *proporcional* (ex: $n/b$)[cite: 212, 415, 541].
 
 Nosso algoritmo de backtracking usa uma abordagem *subtrativa*. A cada chamada recursiva, o "tamanho" do problema (o número de vértices restantes a visitar) é reduzido em 1. A recorrência se assemelha a $T(n) \approx n \cdot T(n-1)$, que não se encaixa no formato $T(n/b)$.
 
-[cite_start]Conforme visto na aula, algoritmos com recorrências baseadas em decrementos lineares (como $T(n-1)$) não podem ser analisados pelo Teorema Mestre e exigem outros métodos, como a expansão de recorrência[cite: 199, 212, 260, 416].
+Conforme visto na aula, algoritmos com recorrências baseadas em decrementos lineares (como $T(n-1)$) não podem ser analisados pelo Teorema Mestre e exigem outros métodos, como a expansão de recorrência[cite: 199, 212, 260, 416].
 
 ### Análise dos Casos de Complexidade (Pior, Médio, Melhor)
 
@@ -169,12 +169,12 @@ Nosso algoritmo de backtracking usa uma abordagem *subtrativa*. A cada chamada r
     * **Descrição:** Ocorre quando o algoritmo precisa explorar o maior número possível de caminhos parciais. Isso acontece se:
         1.  O grafo **não** possui Caminho Hamiltoniano. O algoritmo deve explorar todas as $V!$ permutações (a partir de todas as $V$ origens) para provar que nenhuma funciona.
         2.  O grafo possui um caminho, mas ele é o último a ser encontrado (ex: começa no último vértice `inicio` testado, e os vizinhos corretos são sempre os últimos na lista de adjacência).
-    * [cite_start]**Complexidade:** $O(V \cdot V!)$ [cite: 1132-1134].
+    * **Complexidade:** $O(V \cdot V!)$ [cite: 1132-1134].
 
 * **Melhor Caso:**
     * **Descrição:** Ocorre quando o algoritmo encontra o caminho na primeira tentativa, sem retroceder (backtracking).
     * **Exemplo:** O algoritmo inicia a busca no vértice `0` (primeira iteração da função principal). O primeiro vizinho de `0` é `1`, o primeiro vizinho de `1` (não visitado) é `2`, e assim por diante, formando um caminho `0-1-2-...-(V-1)` que é Hamiltoniano.
-    * **Complexidade:** $O(V)$. [cite_start]O algoritmo faz apenas $V$ chamadas recursivas (uma para cada vértice no caminho) e termina[cite: 1135].
+    * **Complexidade:** $O(V)$. O algoritmo faz apenas $V$ chamadas recursivas (uma para cada vértice no caminho) e termina[cite: 1135].
 
 * **Caso Médio:**
     * **Descrição:** O desempenho médio depende muito da estrutura (densidade) do grafo. Em grafos esparsos, os caminhos são "podados" (backtrack) rapidamente, pois os vértices têm poucos vizinhos. Em grafos densos, mais caminhos precisam ser explorados.
@@ -193,19 +193,19 @@ A execução do script `view.py` (requer `networkx` e `matplotlib`) gera uma vis
 
 ## 🔍 Conclusões Técnicas
 
-1.  **Classificação Comprovada**: O Problema do Caminho Hamiltoniano é um exemplo clássico de um problema **NP-Completo**. [cite_start]Embora sua solução seja *difícil de encontrar* (requer tempo fatorial $O(V!)$ com backtracking), ela é *fácil de verificar* (em tempo linear $O(V)$), colocando-o firmemente na classe NP[cite: 859, 940, 1015].
-2.  **Limites do Teorema Mestre**: A análise deste algoritmo demonstra um limite chave do Teorema Mestre. [cite_start]Ele não é aplicável a algoritmos recursivos que reduzem o problema de forma subtrativa (ex: $T(n-1)$), sendo necessário usar métodos como expansão de recorrência ou análise da árvore de recursão[cite: 260, 415, 541].
-3.  **O Custo do Backtracking**: A implementação demonstra o poder e o custo do backtracking. [cite_start]Embora encontre a solução correta, seu desempenho no pior caso ($O(V!)$) [cite: 1134] o torna inviável para grafos de tamanho moderado, justificando por que problemas NP-Completos são considerados "intratáveis" na prática.
-4.  [cite_start]**Variação de Desempenho**: O algoritmo tem uma diferença drástica entre o melhor caso ($O(V)$) [cite: 1135] [cite_start]e o pior caso ($O(V!)$)[cite: 1134], destacando como a estrutura específica da entrada pode impactar drasticamente o tempo de execução.
+1.  **Classificação Comprovada**: O Problema do Caminho Hamiltoniano é um exemplo clássico de um problema **NP-Completo**. Embora sua solução seja *difícil de encontrar* (requer tempo fatorial $O(V!)$ com backtracking), ela é *fácil de verificar* (em tempo linear $O(V)$), colocando-o firmemente na classe NP[cite: 859, 940, 1015].
+2.  **Limites do Teorema Mestre**: A análise deste algoritmo demonstra um limite chave do Teorema Mestre. Ele não é aplicável a algoritmos recursivos que reduzem o problema de forma subtrativa (ex: $T(n-1)$), sendo necessário usar métodos como expansão de recorrência ou análise da árvore de recursão[cite: 260, 415, 541].
+3.  **O Custo do Backtracking**: A implementação demonstra o poder e o custo do backtracking. Embora encontre a solução correta, seu desempenho no pior caso ($O(V!)$) [cite: 1134] o torna inviável para grafos de tamanho moderado, justificando por que problemas NP-Completos são considerados "intratáveis" na prática.
+4.  **Variação de Desempenho**: O algoritmo tem uma diferença drástica entre o melhor caso ($O(V)$) [cite: 1135] e o pior caso ($O(V!)$)[cite: 1134], destacando como a estrutura específica da entrada pode impactar drasticamente o tempo de execução.
 
 ---
 
 ## 📚 Referências
 
 * **AULA 02_Introdução à teoria da complexidade.pdf** (Material da disciplina)
-* CORMEN, T. H. et al. *Algoritmos: Teoria e Prática*. 3.ed. [cite_start]São Paulo: GEN LTC, 2012[cite: 1139].
-* ZIVIANI, Nivio. *Projeto de algoritmos: com implementações em Java e C++*. [cite_start]São Paulo: Cengage Learning, c2007[cite: 1144].
-* [cite_start]Repositório do Professor: `https://github.com/joaopauloaramuni/fundamentos-de-projeto-e-analise-de-algoritmos` [cite: 1186]
+* CORMEN, T. H. et al. *Algoritmos: Teoria e Prática*. 3.ed. São Paulo: GEN LTC, 2012[cite: 1139].
+* ZIVIANI, Nivio. *Projeto de algoritmos: com implementações em Java e C++*. São Paulo: Cengage Learning, c2007[cite: 1144].
+* Repositório do Professor: `https://github.com/joaopauloaramuni/fundamentos-de-projeto-e-analise-de-algoritmos` [cite: 1186]
 
 ---
 

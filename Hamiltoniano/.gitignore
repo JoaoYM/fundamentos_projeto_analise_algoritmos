@@ -1,0 +1,11 @@
+# Python
+Lib/
+Scripts/
+share/
+include/
+pyvenv.cfg
+*.pyc
+__pycache__/
+
+# Opcional: Ignorar a imagem gerada
+# assets/caminho_hamiltoniano.png
