@@ -1,10 +1,7 @@
-# view.py
-# Função para visualizar o grafo e o Caminho Hamiltoniano (Ponto Extra)
-
 import networkx as nx
 import matplotlib.pyplot as plt
 import os
-from main import Grafo # Importa a classe do arquivo principal
+from main import Grafo
 
 def visualizar_caminho(grafo_obj, caminho_encontrado, orientado=False):
     """
@@ -26,7 +23,6 @@ def visualizar_caminho(grafo_obj, caminho_encontrado, orientado=False):
     arestas_originais = []
     for u in range(grafo_obj.V):
         for v in grafo_obj.adj[u]:
-            # Evitar duplicatas em grafos não orientados se nx.Graph
             if not orientado and (v, u) in arestas_originais:
                 continue
             arestas_originais.append((u, v))
@@ -34,14 +30,15 @@ def visualizar_caminho(grafo_obj, caminho_encontrado, orientado=False):
     G.add_edges_from(arestas_originais)
 
     # Definir layout
-    pos = nx.spring_layout(G, seed=42) # Layout consistente
+    pos = nx.spring_layout(G, seed=42)
     
-    plt.figure(figsize=(10, 7))
+    plt.figure(figsize=(12, 8))
     
-    # 2. Desenhar o grafo original (nós e arestas)
+    # 2. Desenhar o grafo original
     nx.draw_networkx_nodes(G, pos, node_size=700, node_color='lightblue', alpha=0.9)
     nx.draw_networkx_labels(G, pos, font_size=12, font_weight='bold')
-    nx.draw_networkx_edges(G, pos, edgelist=arestas_originais, width=1, alpha=0.3, edge_color='gray', style='dashed')
+    nx.draw_networkx_edges(G, pos, edgelist=arestas_originais, width=1, alpha=0.3, 
+                          edge_color='gray', style='dashed')
 
     # 3. Destacar o Caminho Hamiltoniano
     if caminho_encontrado:
@@ -53,46 +50,67 @@ def visualizar_caminho(grafo_obj, caminho_encontrado, orientado=False):
             
         # Desenha as arestas do caminho
         nx.draw_networkx_edges(G, pos, edgelist=arestas_caminho, 
-                               width=2.5, alpha=0.8, edge_color='red')
+                               width=3, alpha=0.9, edge_color='red', 
+                               arrows=orientado, arrowsize=20)
         
         # Destaca os nós do caminho
-        nx.draw_networkx_nodes(G, pos, nodelist=caminho_encontrado, node_color='red', node_size=700)
+        nx.draw_networkx_nodes(G, pos, nodelist=caminho_encontrado, 
+                              node_color='red', node_size=800)
         
-        plt.title(f"Caminho Hamiltoniano Encontrado (Vermelho)\n{caminho_encontrado}", fontsize=16)
+        plt.title(f"✅ Caminho Hamiltoniano Encontrado\n{caminho_encontrado}", 
+                 fontsize=16, pad=20)
     else:
-        plt.title("Grafo (Nenhum Caminho Hamiltoniano Encontrado)", fontsize=16)
+        plt.title("❌ Grafo (Nenhum Caminho Hamiltoniano Encontrado)", 
+                 fontsize=16, pad=20)
 
-    plt.axis('off') # Remove os eixos
+    plt.axis('off')
 
-    # 4. Salvar a imagem em /assets
-    # Garante que o diretório 'assets' exista
+    # 4. Salvar a imagem
     if not os.path.exists('assets'):
         os.makedirs('assets')
         
     caminho_salvar = 'assets/caminho_hamiltoniano.png'
     plt.savefig(caminho_salvar, bbox_inches='tight', dpi=150)
-    print(f"\nVisualização salva em: {caminho_salvar}")
+    print(f"\n📊 Visualização salva em: {caminho_salvar}")
     plt.show()
 
-# --- Exemplo de Uso ---
-if __name__ == "__main__":
-    # Reutiliza o Exemplo 1 do main.py
-    g_vis = Grafo(5)
-    g_vis.adicionar_aresta(0, 1)
-    g_vis.adicionar_aresta(1, 2)
-    g_vis.adicionar_aresta(2, 3)
-    g_vis.adicionar_aresta(3, 4)
-    g_vis.adicionar_aresta(1, 3)
-    g_vis.adicionar_aresta(1, 4)
-
-    # Encontra o caminho
-    print("Executando 'encontrar_caminho_hamiltoniano' para visualização...")
-    caminho = g_vis.encontrar_caminho_hamiltoniano()
+def main_visualizacao():
+    """Função principal para visualização interativa"""
+    print("=== Visualização do Caminho Hamiltoniano ===")
     
-    # Visualiza
+    # Usar o mesmo input do main.py
+    from main import main as main_algoritmo
+    
+    # Executar o algoritmo principal
+    print("Primeiro, vamos configurar o grafo:")
+    V = int(input("Digite o número total de vértices: "))
+    
+    orientado_input = input("O grafo é orientado? (s/n): ").strip().lower()
+    orientado = orientado_input in ['s', 'sim']
+    
+    grafo = Grafo(V, orientado)
+    
+    E = int(input("Digite o número total de arestas: "))
+    
+    print(f"Digite as {E} arestas (formato: origem destino)")
+    for i in range(E):
+        aresta_input = input(f"Aresta {i+1}: ").strip().split()
+        u = int(aresta_input[0])
+        v = int(aresta_input[1])
+        grafo.adicionar_aresta(u, v)
+    
+    # Encontrar caminho
+    print("\nExecutando algoritmo...")
+    caminho = grafo.encontrar_caminho_hamiltoniano()
+    
     if caminho:
-        print(f"Visualizando caminho: {caminho}")
-        visualizar_caminho(g_vis, caminho, orientado=False)
+        print(f"Caminho encontrado: {caminho}")
+        print("Gerando visualização...")
+        visualizar_caminho(grafo, caminho, orientado)
     else:
-        print("Visualizando grafo (sem caminho encontrado).")
-        visualizar_caminho(g_vis, None, orientado=False)
+        print("Nenhum caminho Hamiltoniano encontrado.")
+        print("Gerando visualização do grafo...")
+        visualizar_caminho(grafo, None, orientado)
+
+if __name__ == "__main__":
+    main_visualizacao()

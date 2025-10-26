@@ -1,5 +1,20 @@
 # main.py
 # Implementação do Algoritmo para Caminho Hamiltoniano usando Backtracking
+# (Com visualização opcional integrada)
+
+import os
+try:
+    # Tenta importar as bibliotecas opcionais de visualização
+    import networkx as nx
+    import matplotlib.pyplot as plt
+    VISUALIZACAO_DISPONIVEL = True
+except ImportError:
+    # Se falhar, desativa a visualização e avisa o usuário
+    VISUALIZACAO_DISPONIVEL = False
+    print("\nAviso: Bibliotecas 'networkx' e 'matplotlib' não encontradas.")
+    print("A visualização do grafo será desativada.")
+    print("Para ativar, instale com: pip install networkx matplotlib\n")
+
 
 class Grafo:
     """
@@ -30,7 +45,8 @@ class Grafo:
             if not orientado:
                 self.adj[v].append(u)
         else:
-            print(f"Aviso: Vértices {u} ou {v} fora do intervalo [0, {self.V-1}]")
+            # Informa o usuário sobre a aresta inválida, mas continua
+            print(f"Aviso: Vértices {u} ou {v} fora do intervalo [0, {self.V-1}]. Aresta ignorada.")
 
     def _backtrack_util(self, v, visitado):
         """
@@ -75,48 +91,152 @@ class Grafo:
                 print(f"Caminho Hamiltoniano encontrado (iniciando em {inicio}):")
                 return self.path
 
-        print("Nenhum Caminho Hamiltoniano encontrado.")
+        # Se o loop terminar sem sucesso
         return None
 
-# --- Exemplo de Uso ---
-if __name__ == "__main__":
+def visualizar_caminho_encontrado(grafo_obj, caminho, orientado=False):
+    """
+    (Função Opcional)
+    Desenha o grafo e destaca o Caminho Hamiltoniano encontrado.
+    Salva a imagem em 'assets/caminho_hamiltoniano.png'
+    """
     
-    # Exemplo 1: Grafo com Caminho Hamiltoniano
-    print("--- Teste 1 (Grafo com caminho) ---")
-    g1 = Grafo(5)
-    g1.adicionar_aresta(0, 1)
-    g1.adicionar_aresta(1, 2)
-    g1.adicionar_aresta(2, 3)
-    g1.adicionar_aresta(3, 4)
-    g1.adicionar_aresta(1, 3) # Adicionando mais arestas
-    g1.adicionar_aresta(1, 4)
-    # Grafo: 0-1, 1-2, 1-3, 1-4, 2-3, 3-4
+    # 1. Criar o objeto de grafo do NetworkX
+    G = nx.DiGraph() if orientado else nx.Graph()
+    
+    # Adicionar nós
+    for i in range(grafo_obj.V):
+        G.add_node(i)
+        
+    # Adicionar arestas originais
+    arestas_originais = []
+    for u in range(grafo_obj.V):
+        for v in grafo_obj.adj[u]:
+            # Evitar duplicatas em grafos não orientados se nx.Graph
+            if not orientado and (v, u) in arestas_originais:
+                continue
+            arestas_originais.append((u, v))
+    G.add_edges_from(arestas_originais)
 
-    caminho1 = g1.encontrar_caminho_hamiltoniano()
-    if caminho1:
-        print(caminho1) # Saída esperada: [0, 1, 2, 3, 4] ou similar
+    # Definir layout
+    pos = nx.spring_layout(G, seed=42) # Layout consistente
+    
+    plt.figure(figsize=(10, 7))
+    
+    # 2. Desenhar o grafo original (nós e arestas)
+    nx.draw_networkx_nodes(G, pos, node_size=700, node_color='lightblue', alpha=0.9)
+    nx.draw_networkx_labels(G, pos, font_size=12, font_weight='bold')
+    nx.draw_networkx_edges(G, pos, edgelist=arestas_originais, width=1, alpha=0.3, edge_color='gray', style='dashed')
 
-    print("\n--- Teste 2 (Grafo sem caminho) ---")
-    # Exemplo 2: Grafo sem Caminho Hamiltoniano (desconexo)
-    g2 = Grafo(5)
-    g2.adicionar_aresta(0, 1)
-    g2.adicionar_aresta(1, 2)
-    g2.adicionar_aresta(3, 4) # Componente desconexo
+    # 3. Destacar o Caminho Hamiltoniano
+    arestas_caminho = []
+    for i in range(len(caminho) - 1):
+        arestas_caminho.append((caminho[i], caminho[i+1]))
+        
+    # Desenha as arestas do caminho
+    nx.draw_networkx_edges(G, pos, edgelist=arestas_caminho, 
+                           width=2.5, alpha=0.8, edge_color='red')
+    
+    # Destaca os nós do caminho
+    nx.draw_networkx_nodes(G, pos, nodelist=caminho, node_color='red', node_size=700)
+    
+    plt.title(f"Caminho Hamiltoniano Encontrado (Vermelho)\n{caminho}", fontsize=16)
+    plt.axis('off') # Remove os eixos
 
-    caminho2 = g2.encontrar_caminho_hamiltoniano()
-    if caminho2:
-        print(caminho2) # Saída esperada: Nenhum Caminho...
+    # 4. Salvar a imagem em /assets
+    # Garante que o diretório 'assets' exista
+    if not os.path.exists('assets'):
+        os.makedirs('assets')
+        
+    caminho_salvar = 'assets/caminho_hamiltoniano.png'
+    plt.savefig(caminho_salvar, bbox_inches='tight', dpi=150)
+    print(f"\nVisualização salva em: {caminho_salvar}")
+    
+    # Mostra o gráfico na tela
+    plt.show()
 
-    print("\n--- Teste 3 (Grafo completo) ---")
-    # Exemplo 3: Grafo completo (sempre tem caminho)
-    g3 = Grafo(4)
-    g3.adicionar_aresta(0, 1)
-    g3.adicionar_aresta(0, 2)
-    g3.adicionar_aresta(0, 3)
-    g3.adicionar_aresta(1, 2)
-    g3.adicionar_aresta(1, 3)
-    g3.adicionar_aresta(2, 3)
+def main():
+    """
+    Função principal para capturar a entrada do usuário e executar o algoritmo.
+    """
+    try:
+        # --- 1. Obter Número de Vértices ---
+        while True:
+            num_vertices_input = input("Digite o número total de vértices: ")
+            try:
+                num_vertices = int(num_vertices_input)
+                if num_vertices <= 0:
+                    print("O número de vértices deve ser positivo.")
+                    continue
+                break
+            except ValueError:
+                print("Entrada inválida. Digite um número inteiro.")
 
-    caminho3 = g3.encontrar_caminho_hamiltoniano()
-    if caminho3:
-        print(caminho3) # Saída esperada: [0, 1, 2, 3] ou qualquer permutação
+        # --- 2. Obter Orientação do Grafo ---
+        orientado_input = input("O grafo é orientado? (s/n): ").strip().lower()
+        orientado = (orientado_input == 's')
+        
+        # --- 3. Inicializar o Grafo ---
+        g = Grafo(num_vertices)
+        
+        # --- 4. Obter Número de Arestas ---
+        while True:
+            num_arestas_input = input("Digite o número total de arestas: ")
+            try:
+                num_arestas = int(num_arestas_input)
+                if num_arestas < 0:
+                    print("O número de arestas não pode ser negativo.")
+                    continue
+                break
+            except ValueError:
+                print("Entrada inválida. Digite um número inteiro.")
+
+        # --- 5. Obter Arestas ---
+        if num_arestas > 0:
+            print(f"\nDigite as {num_arestas} arestas (formato: origem destino):")
+            for i in range(num_arestas):
+                while True:
+                    aresta_input = input(f"Aresta {i+1}: ")
+                    try:
+                        u, v = map(int, aresta_input.split())
+                        # Validação para garantir que os vértices estão no range
+                        if not (0 <= u < num_vertices and 0 <= v < num_vertices):
+                            print(f"Erro: Vértices devem estar no intervalo [0, {num_vertices-1}]. Tente novamente.")
+                            continue
+                        
+                        g.adicionar_aresta(u, v, orientado)
+                        break # Input da aresta foi válido
+                    
+                    except ValueError:
+                        print("Formato inválido. Digite dois números inteiros separados por espaço.")
+                    except IndexError:
+                        print("Formato inválido. Digite dois números inteiros separados por espaço.")
+
+        # --- 6. Executar e Imprimir Resultado ---
+        print("\n--- Buscando Caminho Hamiltoniano ---")
+        caminho = g.encontrar_caminho_hamiltoniano()
+        
+        if caminho:
+            print("Resultado:", caminho)
+            
+            # --- 7. Tentar Visualização (Opcional) ---
+            if VISUALIZACAO_DISPONIVEL:
+                print("Gerando visualização do grafo...")
+                try:
+                    visualizar_caminho_encontrado(g, caminho, orientado)
+                except Exception as e:
+                    print(f"\nOcorreu um erro durante a visualização: {e}")
+                    print("Isso pode ser um problema com o backend do Matplotlib ou Tkinter.")
+            else:
+                 print("(Visualização desativada. Instale 'networkx' e 'matplotlib' para habilitar.)")
+
+        else:
+            print("Resultado: Nenhum Caminho Hamiltoniano foi encontrado.")
+
+    except KeyboardInterrupt:
+        print("\nOperação interrompida pelo usuário.")
+    except EOFError:
+        print("\nEntrada finalizada.")
+
+if __name__ == "__main__":
+    main()
